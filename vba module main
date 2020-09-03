@@ -1,0 +1,25 @@
+
+Sub ShowFormBtn()
+
+UF1.Show
+
+End Sub
+
+
+Public Function OpenConnection() As ADODB.connection
+    ' Read type and location of the database, user login and password
+    Dim location As String
+    Dim connectionString As String
+
+    location = ActiveWorkbook.Path & "\" & location & "Courses.db"
+    
+    connectionString = "Driver={SQLite3 ODBC Driver};Database=" & location
+        
+    Set OpenConnection = New ADODB.connection
+    Call OpenConnection.Open(connectionString)
+    OpenConnection.Execute ("CREATE TABLE IF NOT EXISTS tbl_courses(FirstName TEXT, LastName TEXT, age INTEGER, Course TEXT)")
+    'OpenConnection.Close
+  
+End Function
+
+
