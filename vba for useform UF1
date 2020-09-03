@@ -1,0 +1,153 @@
+
+Dim listbx As String
+Dim glob_boo As Boolean
+
+
+Private Sub UserForm_Initialize()
+
+Dim ws As Worksheet
+Dim tbl As ListObject
+Dim c As Range
+
+Set ws = ThisWorkbook.Worksheets(1)
+Set tbl = Sheet1.ListObjects("tbl_courses")
+
+'Load List Box
+For Each c In tbl.DataBodyRange.Columns(1).Cells
+  ListBox1.AddItem c.Value
+Next c
+
+
+End Sub
+
+
+Private Sub btn_prereq_Click()
+
+Dim boo As Boolean
+
+glob_boo = False
+boo = False
+
+' first level of prereq checking form value missing
+listbx = ""
+For i = 0 To ListBox1.ListCount - 1
+    If ListBox1.Selected(i) Then
+        listbx = ListBox1.List(i)
+    End If
+Next i
+
+If txtbx_fn.Value = "" Then
+    MsgBox "Missing first name value"
+    glob_boo = True
+ElseIf txtbx_ln.Value = "" Then
+    MsgBox "Missing last name value"
+    glob_boo = True
+ElseIf txtbx_age.Value = "" Then
+    MsgBox "Missing age value"
+    glob_boo = True
+ElseIf listbx = "" Then
+    MsgBox "Missing course selection"
+    glob_boo = True
+ElseIf optbtn_m.Value = False And optbtn_f.Value = False Then
+    MsgBox "Missing gender value"
+    glob_boo = True
+End If
+
+' second level of prereq checking course selections validation
+
+Dim msg As String
+If listbx = "Quality Management (Adv.)" Then
+    msg = "The prereq for this course is Quality Management (Int)."
+    boo = True
+ElseIf listbx = "Financial Management (Adv.)" Then
+    msg = "The prereq for this course is Financial Management (Bas)."
+    boo = True
+ElseIf listbx = "Project Management (Adv.)" Then
+    msg = "The prereq for this course is Project Management (Int)."
+    boo = True
+ElseIf listbx <> "" Then
+    msg = "The prereq for this course is Project Management (Bas)."
+    boo = True
+ElseIf listbx = "" Then
+
+End If
+
+If boo Then MsgBox msg
+
+
+End Sub
+
+
+Private Sub btn_clr_Click()
+
+txtbx_fn.Value = ""
+txtbx_ln.Value = ""
+txtbx_age.Value = ""
+
+optbtn_m = False
+optbtn_f = False
+
+ListBox1.ListIndex = -1
+
+End Sub
+
+
+Private Sub btn_save2db_Click()
+
+    Dim connection As connection
+    Set connection = OpenConnection()
+    Dim qu As String
+
+    glob_boo = False
+
+    btn_prereq_Click
+
+    If glob_boo = False Then
+        
+        qu = "INSERT INTO tbl_courses(FirstName, LastName, age, Course) VALUES (" & "'" & txtbx_fn.Value & "','" & txtbx_ln.Value & "','" & txtbx_age.Value & "','" & listbx & "')"
+        
+        connection.Execute qu
+        connection.Close
+    
+        MsgBox "data saved in sqlite"
+        btn_clr_Click
+    End If
+End Sub
+
+
+Private Sub btn_save2Wks_Click()
+
+Dim ws As Worksheet
+Dim lastR As Long
+
+Set ws = ThisWorkbook.Worksheets(1)
+
+    glob_boo = False
+
+    btn_prereq_Click
+
+    If glob_boo = False Then
+
+    With ws
+    
+        lastR = .Cells(.Rows.Count, 7).End(xlUp).Row + 1
+        
+        .Cells(lastR, 7).Value = txtbx_fn.Value
+        .Cells(lastR, 8).Value = txtbx_ln.Value
+        .Cells(lastR, 9).Value = txtbx_age.Value
+        .Cells(lastR, 10).Value = listbx
+        
+    End With
+
+    MsgBox "data written to worksheet"
+    btn_clr_Click
+    Unload Me
+    End If
+
+End Sub
+
+
+
+
+
+
