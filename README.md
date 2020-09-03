@@ -9,4 +9,5 @@ For this to work, you need to install the sqlite odbc driver, be careful to choo
 
 Open this file, there will be a button and if you click it, it will open a form and you can save the data entered on this form in the sqlite table on the worksheet...
 
-Microsoft ActiveX data object library should be added in the reference menu for the sqlite connection to work
+For version _1_0 Microsoft ActiveX data object library should be added in the reference menu for the sqlite connection to work
+For version _1_10 no need for additional reference
