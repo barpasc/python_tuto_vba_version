@@ -8,3 +8,5 @@ NO CHECKS OR DATA VALIDATION DONE, THIS IS ONLY AN EXAMPLE AND CAN BE EXTENDED W
 For this to work, you need to install the sqlite odbc driver, be careful to choose the 32bit version if you run office 32bits even on windows x64. Once this done, check you have that showing in the excel data connection odbc query available
 
 Open this file, there will be a button and if you click it, it will open a form and you can save the data entered on this form in the sqlite table on the worksheet...
+
+Microsoft ActiveX data object library should be added in the reference menu for the sqlite connection to work
